@@ -25,7 +25,7 @@ module.exports = {
         field: 'password',
       },
       image: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         field: 'image',
       },
