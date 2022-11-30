@@ -17,6 +17,8 @@ const apiRoutes = express.Router();
 
 apiRoutes.get('/user', validateJWT, routes.getUser);
 
+apiRoutes.get('/user/:id', validateJWT, routes.getUserbyId);
+
 apiRoutes.post('/login', routes.login);
 app.post('/user', 
   validateDisplayName,

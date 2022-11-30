@@ -8,7 +8,10 @@ const createUser = async (displayName, email, password, image) => {
   return newUser;
 };
 
-const getByUserId = (userId) => User.findByPk(userId);
+const getByUserId = (id) => User.findOne({
+  where: { id },
+  attributes: ['id', 'displayName', 'email', 'image'],
+});
 
 const getUsers = () => User.findAll({
   attributes: ['id', 'displayName', 'email', 'image'],
