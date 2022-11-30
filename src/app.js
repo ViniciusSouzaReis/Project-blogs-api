@@ -1,10 +1,11 @@
 const express = require('express');
 const routes = require('./routes');
 const { tokenGenerator } = require('./auth/generateToken');
-const { UserService } = require('./services');
+const { UserService, CategoriesService } = require('./services');
 const validateDisplayName = require('./auth/validateBody/validateDisplayName');
 const validateEmail = require('./auth/validateBody/validateEmail');
 const validatePassword = require('./auth/validateBody/validatePassword');
+const validateName = require('./auth/validateBody/validateName');
 const validateJWT = require('./auth/validateJWT');
 
 // ...
@@ -19,6 +20,15 @@ apiRoutes.get('/user', validateJWT, routes.getUser);
 
 apiRoutes.get('/user/:id', validateJWT, routes.getUserbyId);
 
+apiRoutes.post('/categories', 
+  validateJWT,
+  validateName,
+  async (req, res) => {
+    const { name } = req.body;
+    const category = await CategoriesService.createCategory(name);
+    return res.status(201).json(category); 
+});
+
 apiRoutes.post('/login', routes.login);
 app.post('/user', 
   validateDisplayName,
@@ -26,9 +36,7 @@ app.post('/user',
   validatePassword,
   async (req, res) => {
     const { displayName, email, password, image } = req.body;
-    console.log(email);
     const user = await UserService.getByEmail(email);
-    console.log(user);
     if (!user) {
       await UserService.createUser(displayName, email, password, image);
       const data = { displayName, email, image };
