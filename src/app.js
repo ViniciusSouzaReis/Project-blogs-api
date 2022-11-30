@@ -5,6 +5,7 @@ const { UserService } = require('./services');
 const validateDisplayName = require('./auth/validateBody/validateDisplayName');
 const validateEmail = require('./auth/validateBody/validateEmail');
 const validatePassword = require('./auth/validateBody/validatePassword');
+const validateJWT = require('./auth/validateJWT');
 
 // ...
 
@@ -13,6 +14,8 @@ const app = express();
 app.use(express.json());
 
 const apiRoutes = express.Router();
+
+apiRoutes.get('/user', validateJWT, routes.getUser);
 
 apiRoutes.post('/login', routes.login);
 app.post('/user', 

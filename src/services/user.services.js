@@ -8,7 +8,15 @@ const createUser = async (displayName, email, password, image) => {
   return newUser;
 };
 
+const getByUserId = (userId) => User.findByPk(userId);
+
+const getUsers = () => User.findAll({
+  attributes: ['id', 'displayName', 'email', 'image'],
+});
+
 module.exports = {
   getByEmail,
   createUser,
+  getByUserId,
+  getUsers,
 };
