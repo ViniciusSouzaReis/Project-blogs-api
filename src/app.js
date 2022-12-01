@@ -24,6 +24,7 @@ const apiRoutes = express.Router();
 apiRoutes.get('/user', validateJWT, routes.getUser);
 
 apiRoutes.get('/post', validateJWT, routes.getBlogPosts);
+apiRoutes.get('/post/:id', validateJWT, routes.getBlogPostById);
 
 apiRoutes.get('/categories', validateJWT, routes.getCategory);
 
