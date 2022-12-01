@@ -1,11 +1,16 @@
 const express = require('express');
 const routes = require('./routes');
 const { tokenGenerator } = require('./auth/generateToken');
-const { UserService, CategoriesService } = require('./services');
+const { UserService,
+  CategoriesService,
+  BlogPostService,
+  PostCategoriesService, 
+} = require('./services');
 const validateDisplayName = require('./auth/validateBody/validateDisplayName');
 const validateEmail = require('./auth/validateBody/validateEmail');
 const validatePassword = require('./auth/validateBody/validatePassword');
 const validateName = require('./auth/validateBody/validateName');
+const validatePostBody = require('./auth/validateBody/validatePostBody');
 const validateJWT = require('./auth/validateJWT');
 
 // ...
@@ -21,6 +26,23 @@ apiRoutes.get('/user', validateJWT, routes.getUser);
 apiRoutes.get('/categories', validateJWT, routes.getCategory);
 
 apiRoutes.get('/user/:id', validateJWT, routes.getUserbyId);
+
+apiRoutes.post('/post', 
+  validateJWT,
+  validatePostBody,
+  async (req, res) => {
+    const { title, content, categoryIds } = req.body;
+    const userId = req.user;
+
+    const inserBlogPost = await BlogPostService.createBlogPost(title, content, userId);
+    const { id } = await inserBlogPost;
+    console.log(id);
+    categoryIds.forEach(async (category) => {
+      await PostCategoriesService.createPostsCategories(id, category);
+    });
+    
+    return res.status(201).json(inserBlogPost);
+});
 
 apiRoutes.post('/categories', 
   validateJWT,
